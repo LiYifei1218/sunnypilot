@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from enum import Enum, IntFlag, StrEnum
-from panda import Panda
 from typing import Dict, List, Union
 
 from cereal import car
@@ -22,13 +21,11 @@ class CarControllerParams:
     self.STEER_DRIVER_FACTOR = 1       # from dbc
 
     if CP.carFingerprint in GLOBAL_GEN2:
-      self.STEER_MAX = 1400
+      self.STEER_MAX = 1000
       self.STEER_DELTA_UP = 40
       self.STEER_DELTA_DOWN = 40
     elif CP.carFingerprint == CAR.IMPREZA_2020:
       self.STEER_MAX = 1439
-    elif CP.safetyConfigs[0].safetyParam & Panda.FLAG_SUBARU_MAX_STEER_IMPREZA_2018:
-      self.STEER_MAX = 3071
     else:
       self.STEER_MAX = 2047
 
@@ -63,10 +60,6 @@ class SubaruFlags(IntFlag):
 
 GLOBAL_ES_ADDR = 0x787
 GEN2_ES_BUTTONS_DID = b'\x11\x30'
-
-
-class SubaruFlagsSP(IntFlag):
-  SP_SUBARU_SNG = 1
 
 
 class CanBus:
@@ -214,7 +207,6 @@ FW_VERSIONS = {
       b'\xa1\\  x04\x01',
       b'\xa1  \x03\x03',
       b'\xa1  \x02\x01',
-      b'\xa1  \x02\x02',
     ],
     (Ecu.eps, 0x746, None): [
       b'\x9b\xc0\x11\x00',
@@ -228,13 +220,11 @@ FW_VERSIONS = {
       b'\xde\"a0\x07',
       b'\xe2"aq\x07',
       b'\xde,\xa0@\x07',
-      b'\xe2,\xa0@\x07',
     ],
     (Ecu.transmission, 0x7e1, None): [
       b'\xa5\xf6\x05@\x00',
       b'\xa7\xf6\x04@\x00',
       b'\xa5\xfe\xc7@\x00',
-      b'\xa7\xfe\xc4@\x00',
     ],
   },
   CAR.IMPREZA: {
@@ -569,6 +559,7 @@ FW_VERSIONS = {
       b'\xbd\xf2@\x81\000',
       b'\xbe\xfb\xe0p\000',
       b'\xbf\xfb\xe0b\x00',
+      b'\xbd\xf2@\x80\x00',
     ],
   },
   CAR.OUTBACK_PREGLOBAL_2018: {
